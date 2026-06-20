@@ -1,0 +1,17 @@
+# Pinned to versions that ship cp314 (Python 3.14) wheels.
+# Earlier pydantic 2.10.x pulls pydantic-core 2.27.x (PyO3 0.22) which
+# maxes out at Python 3.13 and will fail to compile from source on 3.14.
+# python-jose is unmaintained and its cryptography extra has no cp314 wheel,
+# so we use PyJWT instead.
+fastapi==0.118.0
+uvicorn[standard]==0.34.0
+SQLAlchemy==2.0.36
+psycopg2-binary==2.9.10
+pydantic==2.12.5
+pydantic-settings==2.13.0
+email-validator==2.2.0
+PyJWT==2.10.1
+bcrypt==4.2.1
+python-dotenv==1.0.1
+slowapi==0.1.9
+python-multipart==0.0.20
