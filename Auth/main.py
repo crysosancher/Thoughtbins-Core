@@ -346,12 +346,16 @@ async def login(
     db: Session = Depends(get_db),
 ) -> TokenResponse:
     """Authenticate by username + password and return new tokens."""
-    user = db.query(User).filter(User.username == payload.username).first()
+    user = (
+        db.query(User)
+        .filter((User.username == payload.username) | (User.email == payload.username))
+        .first()
+    )
     if user is None or not verify_password(payload.password, user.hashed_password):
         # Same message in both branches prevents user-enumeration.
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
-            detail="Invalid username or password",
+            detail="Invalid username, email, or password",
         )
     if not user.is_active:
         raise HTTPException(
@@ -508,7 +512,7 @@ async def change_password(
         # Same generic message as /login to avoid disclosing account state.
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
-            detail="Invalid username or password",
+            detail="Invalid username, email, or password",
         )
 
     current_user.hashed_password = hash_password(payload.new_password)

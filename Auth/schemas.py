@@ -1,7 +1,7 @@
 from datetime import datetime
 from typing import Optional
 
-from pydantic import BaseModel, ConfigDict, EmailStr, Field, field_validator, model_validator
+from pydantic import AliasChoices, BaseModel, ConfigDict, EmailStr, Field, field_validator, model_validator
 import re
 
 
@@ -54,7 +54,13 @@ class RegisterRequest(BaseModel):
 class LoginRequest(BaseModel):
     """Payload accepted by POST /login."""
 
-    username: str = Field(..., min_length=3, max_length=128)
+    username: str = Field(
+        ...,
+        min_length=3,
+        max_length=254,
+        validation_alias=AliasChoices("username", "username_or_email", "email"),
+        description="Username or email address",
+    )
     password: str = Field(..., min_length=1, max_length=128)
 
 
