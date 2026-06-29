@@ -10,8 +10,8 @@ services:
     container_name: auth-api
     restart: unless-stopped
 
-    expose:
-      - "8000"
+    ports:
+      - "8000:8000"
 
     environment:
       - APP_NAME=Auth API
@@ -40,20 +40,8 @@ services:
       retries: 3
       start_period: 10s
 
-    labels:
-      - "traefik.enable=true"
-      - "traefik.docker.network=root_default"
-      - "traefik.http.routers.auth-api.rule=Host(`72.61.179.20`)"
-      - "traefik.http.routers.auth-api.entrypoints=websecure"
-      - "traefik.http.routers.auth-api.tls=true"
-      - "traefik.http.routers.auth-api.tls.certresolver=mytlschallenge"
-      - "traefik.http.services.auth-api.loadbalancer.server.port=8000"
-
     networks:
       - auth-network
-      - root_default
 
 networks:
   auth-network:
-  root_default:
-    external: true
